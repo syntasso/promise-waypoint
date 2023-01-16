@@ -3,6 +3,7 @@ set -e
 
 test_promise() {
   kubectl wait --for=condition=ready --timeout=5s --namespace waypoint pod/waypoint-server-0
+  kubectl wait --for=condition=complete --timeout=5s --namespace waypoint job/waypoint-token-generator
 }
 
 test_resource_request() {
