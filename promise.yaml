@@ -312,22 +312,19 @@ spec:
         port: 80
         targetPort: http
       - name: https
-        nodePort: 30003
         port: 443
         targetPort: https
       - name: grpc
-        nodePort: 30001
         port: 9701
         targetPort: grpc
       - name: https-2
-        nodePort: 30002
         port: 9702
         targetPort: https
       selector:
         app.kubernetes.io/instance: waypoint
         app.kubernetes.io/name: waypoint
         component: server
-      type: NodePort
+      type: LoadBalancer
   - apiVersion: apps/v1
     kind: StatefulSet
     metadata:
@@ -526,7 +523,7 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: waypoint
         helm.sh/chart: waypoint-0.1.17
-      name: waypoint-bootstrap-0.10.5-r1ceul
+      name: waypoint-bootstrap-0.10.5-bnvsni
       namespace: waypoint
     spec:
       activeDeadlineSeconds: 600
