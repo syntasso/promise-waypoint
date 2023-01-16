@@ -34,7 +34,7 @@ And you should be able to go to the `waypoint-ui` service. If you used a loadbal
 kubectl get service -n waypoint waypoint-ui -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
 ```
 
-If you instead configured your KinD cluster with a NodePort (option 2 above), you can immediately go to `https://localhost:30002`.
+If you instead configured your KinD cluster with a NodePort (option 2 above), you can immediately go to `https://localhost:30002`. Note that this is the `https` port.
 
 To get started with waypoint, you will want to introduce users. You can do this by making a resource request:
 ```
@@ -55,6 +55,8 @@ kubectl get secrets --namespace waypoint waypoint-token-annedeveloper -o jsonpat
 ```
 
 You can then use this secret via the UI if you select `Received an invite? Redeem invite` link.
+
+If you want to authenticate through the CLI, you should use the port associated with `grpc` (`30001` if you are using the `setup-with-nodeport` script).
 
 You are now able to authenticate through either the CLI or the UI to use Waypoint. For more details on how to use Waypoint to build and deploy your applciations, please see their [documentation and tutorials](https://developer.hashicorp.com/waypoint/docs/getting-started).
 
