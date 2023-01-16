@@ -33,7 +33,7 @@ commands:
       - run:
           name: Install Kratix
           command: |
-            ./promise-waypoint/internal/scripts/setup-with-nodeport
+            ./internal/scripts/setup-with-nodeport
 
 jobs:
   test-and-push:
@@ -45,17 +45,6 @@ jobs:
     steps:
       - checkout
       - install_software
-      - run:
-          name: Validate no pending changes
-          command: |
-            ./internal/scripts/inject-wcr
-
-            if ! git diff --exit-code .; then
-              echo ""
-              echo "Changes in the WCR were detected"
-              echo "Injection of WCR via CI is not supported. Please commit and push them manually."
-              exit 1
-            fi
       - run:
           name: Install Promise
           command: |
@@ -77,6 +66,18 @@ jobs:
           # 5 minutes total retry (3 sec * 100 times = 300 sec)
           sleep: 3
           retry-count: 100
+      - run:
+          name: Validate no pending changes
+          command: |
+            git checkout . # Necessary due to the setup script
+            ./internal/scripts/inject-wcr
+
+            if ! git diff --exit-code .; then
+              echo ""
+              echo "Changes in the WCR were detected"
+              echo "Injection of WCR via CI is not supported. Please commit and push them manually."
+              exit 1
+            fi
       - when:
           condition:
             equal: [main, << pipeline.git.branch >>]
