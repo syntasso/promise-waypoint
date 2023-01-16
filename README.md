@@ -22,7 +22,7 @@ To install:
 kubectl apply -f https://raw.githubusercontent.com/syntasso/kratix-marketplace/main/waypoint/promise.yaml
 ```
 
-To make a resource request (small by default):
+To make a resource request:
 ```
 kubectl apply -f https://raw.githubusercontent.com/syntasso/kratix-marketplace/main/waypoint/resource-request.yaml
 ```
