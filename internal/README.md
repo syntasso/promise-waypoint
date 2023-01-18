@@ -14,7 +14,7 @@ To build run:
 
 ### Switch to NodePort
 
-To use the NodePort to run `./scripts/setup-with-nodeport` which will provide:
+To use the NodePort to run `./scripts/setup-kind-with-nodeport` which will provide:
 
 * A local KinD cluster that:
     * Has ports 30001, 30002, 30003 exposed

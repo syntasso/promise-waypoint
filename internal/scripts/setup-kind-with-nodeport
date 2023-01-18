@@ -2,18 +2,26 @@
 
 PWD="$( cd $(dirname $0)/.. && pwd)"
 
-yq eval -i "select(.kind == \"Service\" and .metadata.labels[\"component\"] == \"ui\").spec.type |= \"NodePort\" |
-            select(.kind == \"Service\" and .metadata.labels[\"component\"] == \"ui\").spec.ports = [
-                    {\"name\": \"http\", \"port\": 80, \"targetPort\": \"http\" },
-                    {\"name\": \"https\", \"port\": 443, \"nodePort\": 30003, \"targetPort\": \"https\"},
-                    {\"name\": \"grpc\", \"port\": 9701, \"nodePort\": 30001, \"targetPort\": \"grpc\"},
-                    {\"name\": \"https-2\", \"port\": 9702, \"nodePort\": 30002, \"targetPort\": \"https\"}
-                  ]" ${PWD}/resources/waypoint-server.yaml
-
-sh ${PWD}/scripts/inject-wcr
+source update-promise-with-nodeport
 
 kind delete cluster --name platform
-kind create cluster --name platform --config ${PWD}/scripts/config/kind-platform-config.yaml
+
+cat <<EOF | kind create cluster --name platform --config -
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+    extraPortMappings:
+      # These allow localhost ports to be open for the specfied NodePort service
+      # on every cluster creation. While these services are not always running,
+      # they are commonly used and accessed.
+      - containerPort: 30001
+        hostPort: 30001
+      - containerPort: 30002
+        hostPort: 30002
+      - containerPort: 30003
+        hostPort: 30003
+EOF
 
 images=(
     minio/minio:RELEASE.2022-06-30T20-58-09Z
