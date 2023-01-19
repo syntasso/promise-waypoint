@@ -55,7 +55,7 @@ jobs:
       - run:
           name: Install Kratix
           command: |
-            ./internal/scripts/setup-with-nodeport
+            ./internal/scripts/setup-kind-with-nodeport
       - run:
           name: Install Promise
           command: |

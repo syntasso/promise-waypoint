@@ -60,13 +60,22 @@ wait_for_bootstrap_token_to_be_populated() {
     echo '✅'
 }
 
-waypoint_login_with_bootstrap_token() {
+
+login_with_bootstrap_token() {
     echo "authenticating with bootstrap token"
     waypoint login \
         -server-addr=${WAYPOINT_UI_ADDR} \
         -server-tls-skip-verify \
         -from-kubernetes \
         -from-kubernetes-namespace=waypoint
+}
+
+login_with_admin_token() {
+    echo "authenticating with admin token"
+    waypoint login \
+        -server-addr=${WAYPOINT_UI_ADDR} \
+        -server-tls-skip-verify \
+        -token=$(kubectl get secret ${TOKEN_NAME_ADMIN} --output json | jq -r '.data.token' | base64 -d)
 }
 
 create_k8s_secret() {
@@ -92,14 +101,12 @@ generate_token() {
     if ${BOOTSTRAP_REQUIRED}; then wait_for_bootstrap_token_to_be_populated; fi
 
     if kubectl get secret ${TOKEN_NAME_ADMIN}; then
-        echo "authenticating with existing admin token"
-        waypoint login \
-            -server-addr=${WAYPOINT_UI_ADDR} \
-            -server-tls-skip-verify \
-            -token=$(kubectl get secret ${TOKEN_NAME_ADMIN} --output json | jq -r '.data.token' | base64 -d)
+        login_with_admin_token
     else
-        waypoint_login_with_bootstrap_token
+        
+        login_with_bootstrap_token
         create_k8s_secret ${TOKEN_NAME_ADMIN} admin
+        login_with_admin_token
         exit 0
     fi
 
