@@ -65,7 +65,7 @@ jobs:
           command: ./internal/scripts/test promise
           # 5 minutes total retry (3 sec * 100 times = 300 sec)
           sleep: 3
-          retry-count: 120
+          retry-count: 100
       - run:
           name: Apply resource-request
           command: |

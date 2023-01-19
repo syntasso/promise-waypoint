@@ -2,7 +2,7 @@
 
 PWD="$( cd $(dirname $0)/.. && pwd)"
 
-source update-promise-with-nodeport
+source ${PWD}/scripts/update-promise-with-nodeport
 
 kind delete cluster --name platform
 

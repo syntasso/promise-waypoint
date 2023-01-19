@@ -2,6 +2,8 @@
 
 PWD="$( cd $(dirname $0)/.. && pwd)"
 
+echo "updating promise to use NodePort for waypoint-server"
+
 yq eval -i "select(.kind == \"Service\" and .metadata.labels[\"component\"] == \"ui\").spec.type |= \"NodePort\" |
             select(.kind == \"Service\" and .metadata.labels[\"component\"] == \"ui\").spec.ports = [
                     {\"name\": \"http\", \"port\": 80, \"targetPort\": \"http\" },
