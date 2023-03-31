@@ -51,12 +51,15 @@ anne-token-generator               1/1           7s         70m
 
 And the resulting secret:
 ```
-kubectl get secrets --namespace waypoint waypoint-token-annedeveloper -o jsonpath='{.data.token}'
+kubectl get secrets --namespace waypoint waypoint-token-annedeveloper -o jsonpath='{.data.token}' | base64 -d
 ```
 
 You can then use this secret via the UI if you select `Received an invite? Redeem invite` link.
 
-If you want to authenticate through the CLI, you should use the port associated with `grpc` (`30001` if you are using the `setup-with-nodeport` script).
+If you want to authenticate through the CLI, you can run:
+```
+waypoint login -token=$(kubectl get secrets -n waypoint waypoint-server-token -o json | jq -r '.data.token' | base64 -d)
+```
 
 You are now able to authenticate through either the CLI or the UI to use Waypoint. For more details on how to use Waypoint to build and deploy your applciations, please see their [documentation and tutorials](https://developer.hashicorp.com/waypoint/docs/getting-started).
 

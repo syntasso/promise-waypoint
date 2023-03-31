@@ -12,6 +12,11 @@ apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
   - role: control-plane
     extraPortMappings:
+      # These ports are for local testing of GitOps repos (MinIO and Gitea)
+      - containerPort: 31337
+        hostPort: 31337
+      - containerPort: 31333
+        hostPort: 31333
       # These allow localhost ports to be open for the specfied NodePort service
       # on every cluster creation. While these services are not always running,
       # they are commonly used and accessed.
