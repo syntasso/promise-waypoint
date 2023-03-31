@@ -18,7 +18,7 @@ To install:
 > 2. **Create your KinD cluster and this Promise to use NodePort type Services (see: [Developer Readme](./internal/README.md#switch-to-nodeport))**
 
 ```
-kubectl apply -f https://raw.githubusercontent.com/syntasso/kratix-marketplace/main/waypoint/promise.yaml
+kubectl apply -f https://raw.githubusercontent.com/syntasso/promise-waypoint/main/promise.yaml
 ```
 
 To verify installation of the service, you should see two healhty statefulsets:
@@ -38,7 +38,7 @@ If you instead configured your KinD cluster with a NodePort (option 2 above), yo
 
 To get started with waypoint, you will want to introduce users. You can do this by making a resource request:
 ```
-kubectl apply -f https://raw.githubusercontent.com/syntasso/kratix-marketplace/main/waypoint/resource-request.yaml
+kubectl apply -f https://raw.githubusercontent.com/syntasso/promise-waypoint/main/resource-request.yaml
 ```
 
 You can verify this by seeing:
