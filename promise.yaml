@@ -5,7 +5,39 @@ metadata:
   name: waypoint
   namespace: default
 spec:
-  workerClusterResources:
+  api:
+    apiVersion: apiextensions.k8s.io/v1
+    kind: CustomResourceDefinition
+    metadata:
+      name: waypoints.marketplace.kratix.io
+    spec:
+      group: marketplace.kratix.io
+      names:
+        kind: waypoint
+        plural: waypoints
+        singular: waypoint
+      scope: Namespaced
+      versions:
+      - name: v1alpha1
+        schema:
+          openAPIV3Schema:
+            properties:
+              spec:
+                properties:
+                  username:
+                    description: 'Waypoint username that is requesting access. Must
+                      match be less than 238 characters, start and end with alphanumeric,
+                      and only contain alphanumeric, ''-'', or ''.'' characters. '
+                    maxLength: 238
+                    pattern: ^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?
+                    type: string
+                required:
+                - username
+                type: object
+            type: object
+        served: true
+        storage: true
+  dependencies:
   - apiVersion: v1
     kind: Namespace
     metadata:
@@ -579,38 +611,16 @@ spec:
           - emptyDir: {}
             name: home
       ttlSecondsAfterFinished: 300
-  xaasCrd:
-    apiVersion: apiextensions.k8s.io/v1
-    kind: CustomResourceDefinition
-    metadata:
-      name: waypoints.marketplace.kratix.io
-    spec:
-      group: marketplace.kratix.io
-      names:
-        kind: waypoint
-        plural: waypoints
-        singular: waypoint
-      scope: Namespaced
-      versions:
-      - name: v1alpha1
-        schema:
-          openAPIV3Schema:
-            properties:
-              spec:
-                properties:
-                  username:
-                    description: 'Waypoint username that is requesting access. Must
-                      match be less than 238 characters, start and end with alphanumeric,
-                      and only contain alphanumeric, ''-'', or ''.'' characters. '
-                    maxLength: 238
-                    pattern: ^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?
-                    type: string
-                required:
-                - username
-                type: object
-            type: object
-        served: true
-        storage: true
-  xaasRequestPipeline:
-  - ghcr.io/syntasso/kratix-marketplace/waypoint-request-pipeline:v0.1.0
+  workflows:
+    resource:
+      configure:
+      - apiVersion: platform.kratix.io/v1alpha1
+        kind: Pipeline
+        metadata:
+          name: instance-configure
+          namespace: default
+        spec:
+          containers:
+          - image: ghcr.io/syntasso/kratix-marketplace/waypoint-configure-pipeline:v0.1.0
+            name: waypoint-configure-pipeline
 status: {}

@@ -5,7 +5,7 @@ set -e
 PWD="$( cd $(dirname $0)/.. && pwd)"
 
 promise_name="waypoint"
-pipeline_image="ghcr.io/syntasso/kratix-marketplace/${promise_name}-request-pipeline:v0.1.0"
+pipeline_image="ghcr.io/syntasso/kratix-marketplace/${promise_name}-configure-pipeline:v0.1.0"
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -13,7 +13,7 @@ while [ $# -gt 0 ]; do
       docker build \
         --tag "${pipeline_image}" \
         --platform linux/amd64 \
-        "${PWD}/request-pipeline" ;;
+        "${PWD}/configure-pipeline" ;;
 
     load)
       kind load docker-image "${pipeline_image}" --name platform ;;
