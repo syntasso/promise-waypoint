@@ -156,7 +156,7 @@ spec:
         app.kubernetes.io/instance: waypoint
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: waypoint
-        helm.sh/chart: waypoint-0.1.17
+        helm.sh/chart: waypoint-0.1.20
       name: waypoint-bootstrap
       namespace: waypoint
   - apiVersion: v1
@@ -166,7 +166,7 @@ spec:
         app.kubernetes.io/instance: waypoint
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: waypoint
-        helm.sh/chart: waypoint-0.1.17
+        helm.sh/chart: waypoint-0.1.20
       name: waypoint-runner-odr
       namespace: waypoint
   - apiVersion: v1
@@ -176,7 +176,7 @@ spec:
         app.kubernetes.io/instance: waypoint
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: waypoint
-        helm.sh/chart: waypoint-0.1.17
+        helm.sh/chart: waypoint-0.1.20
       name: waypoint-runner
       namespace: waypoint
   - apiVersion: v1
@@ -186,7 +186,7 @@ spec:
         app.kubernetes.io/instance: waypoint
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: waypoint
-        helm.sh/chart: waypoint-0.1.17
+        helm.sh/chart: waypoint-0.1.20
       name: waypoint
       namespace: waypoint
   - apiVersion: rbac.authorization.k8s.io/v1
@@ -311,7 +311,7 @@ spec:
         app.kubernetes.io/instance: waypoint
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: waypoint
-        helm.sh/chart: waypoint-0.1.17
+        helm.sh/chart: waypoint-0.1.20
       name: waypoint-server
       namespace: waypoint
     spec:
@@ -332,7 +332,7 @@ spec:
     metadata:
       labels:
         app: waypoint
-        chart: waypoint-0.1.17
+        chart: waypoint-0.1.20
         component: ui
         heritage: Helm
         release: waypoint
@@ -344,19 +344,22 @@ spec:
         port: 80
         targetPort: http
       - name: https
+        nodePort: 30003
         port: 443
         targetPort: https
       - name: grpc
+        nodePort: 30001
         port: 9701
         targetPort: grpc
       - name: https-2
+        nodePort: 30002
         port: 9702
         targetPort: https
       selector:
         app.kubernetes.io/instance: waypoint
         app.kubernetes.io/name: waypoint
         component: server
-      type: LoadBalancer
+      type: NodePort
   - apiVersion: apps/v1
     kind: StatefulSet
     metadata:
@@ -380,7 +383,7 @@ spec:
             app.kubernetes.io/instance: waypoint
             app.kubernetes.io/name: waypoint
             component: runner
-            helm.sh/chart: waypoint-0.1.17
+            helm.sh/chart: waypoint-0.1.20
         spec:
           containers:
           - args:
@@ -405,7 +408,7 @@ spec:
                 secretKeyRef:
                   key: token
                   name: waypoint-runner-token
-            image: docker.io/hashicorp/waypoint:0.10.5
+            image: docker.io/hashicorp/waypoint:0.11.2
             imagePullPolicy: IfNotPresent
             livenessProbe:
               failureThreshold: 10
@@ -484,7 +487,7 @@ spec:
             app.kubernetes.io/instance: waypoint
             app.kubernetes.io/name: waypoint
             component: server
-            helm.sh/chart: waypoint-0.1.17
+            helm.sh/chart: waypoint-0.1.20
         spec:
           containers:
           - args:
@@ -501,7 +504,7 @@ spec:
             env:
             - name: HOME
               value: /home/waypoint
-            image: docker.io/hashicorp/waypoint:0.10.5
+            image: docker.io/hashicorp/waypoint:0.11.2
             imagePullPolicy: IfNotPresent
             livenessProbe:
               failureThreshold: 2
@@ -554,8 +557,8 @@ spec:
         app.kubernetes.io/instance: waypoint
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: waypoint
-        helm.sh/chart: waypoint-0.1.17
-      name: waypoint-bootstrap-0.10.5-bnvsni
+        helm.sh/chart: waypoint-0.1.20
+      name: waypoint-bootstrap-0.11.2-ghzk65
       namespace: waypoint
     spec:
       activeDeadlineSeconds: 600
@@ -566,7 +569,7 @@ spec:
             app.kubernetes.io/instance: waypoint
             app.kubernetes.io/name: waypoint
             component: bootstrap
-            helm.sh/chart: waypoint-0.1.17
+            helm.sh/chart: waypoint-0.1.20
           name: waypoint-bootstrap
         spec:
           containers:
@@ -576,7 +579,7 @@ spec:
             - -vvv
             - -root-token-secret=waypoint-server-token
             - -runner-token-secret=waypoint-runner-token
-            - -odr-image=docker.io/hashicorp/waypoint-odr:0.10.5
+            - -odr-image=docker.io/hashicorp/waypoint-odr:0.11.2
             - -odr-service-account=waypoint-runner-odr
             - -odr-image-pull-policy=IfNotPresent
             - -advertise-service=waypoint-ui
@@ -593,7 +596,7 @@ spec:
               value: "true"
             - name: WAYPOINT_SERVER_TLS_SKIP_VERIFY
               value: "true"
-            image: docker.io/hashicorp/waypoint:0.10.5
+            image: docker.io/hashicorp/waypoint:0.11.2
             imagePullPolicy: IfNotPresent
             name: waypoint-bootstrap
             resources: null

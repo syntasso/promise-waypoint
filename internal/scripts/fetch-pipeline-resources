@@ -2,8 +2,8 @@
 
 PWD="$( cd $(dirname $0)/.. && pwd)"
 
-mkdir -p $PWD/request-pipeline/resources
-resources_path=$PWD/request-pipeline/resources
+mkdir -p $PWD/configure-pipeline/resources
+resources_path=$PWD/configure-pipeline/resources
 
 cat > ${resources_path}/token-generator-job.yaml <<EOF
 ---

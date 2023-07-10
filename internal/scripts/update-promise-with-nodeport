@@ -10,6 +10,6 @@ yq eval -i "select(.kind == \"Service\" and .metadata.labels[\"component\"] == \
                     {\"name\": \"https\", \"port\": 443, \"nodePort\": 30003, \"targetPort\": \"https\"},
                     {\"name\": \"grpc\", \"port\": 9701, \"nodePort\": 30001, \"targetPort\": \"grpc\"},
                     {\"name\": \"https-2\", \"port\": 9702, \"nodePort\": 30002, \"targetPort\": \"https\"}
-                  ]" ${PWD}/resources/waypoint-server.yaml
+                  ]" ${PWD}/dependencies/waypoint-server.yaml
 
-sh ${PWD}/scripts/inject-wcr
+sh ${PWD}/scripts/inject-deps

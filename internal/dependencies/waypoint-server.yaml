@@ -6,7 +6,7 @@ metadata:
   name: waypoint-bootstrap
   namespace: waypoint
   labels:
-    helm.sh/chart: waypoint-0.1.17
+    helm.sh/chart: waypoint-0.1.20
     app.kubernetes.io/name: waypoint
     app.kubernetes.io/instance: waypoint
     app.kubernetes.io/managed-by: Helm
@@ -18,7 +18,7 @@ metadata:
   name: waypoint-runner-odr
   namespace: waypoint
   labels:
-    helm.sh/chart: waypoint-0.1.17
+    helm.sh/chart: waypoint-0.1.20
     app.kubernetes.io/name: waypoint
     app.kubernetes.io/instance: waypoint
     app.kubernetes.io/managed-by: Helm
@@ -30,7 +30,7 @@ metadata:
   name: waypoint-runner
   namespace: waypoint
   labels:
-    helm.sh/chart: waypoint-0.1.17
+    helm.sh/chart: waypoint-0.1.20
     app.kubernetes.io/name: waypoint
     app.kubernetes.io/instance: waypoint
     app.kubernetes.io/managed-by: Helm
@@ -42,7 +42,7 @@ metadata:
   name: waypoint
   namespace: waypoint
   labels:
-    helm.sh/chart: waypoint-0.1.17
+    helm.sh/chart: waypoint-0.1.20
     app.kubernetes.io/name: waypoint
     app.kubernetes.io/instance: waypoint
     app.kubernetes.io/managed-by: Helm
@@ -167,7 +167,7 @@ metadata:
   name: waypoint-server
   namespace: waypoint
   labels:
-    helm.sh/chart: waypoint-0.1.17
+    helm.sh/chart: waypoint-0.1.20
     app.kubernetes.io/name: waypoint
     app.kubernetes.io/instance: waypoint
     app.kubernetes.io/managed-by: Helm
@@ -195,7 +195,7 @@ metadata:
   namespace: waypoint
   labels:
     app: waypoint
-    chart: waypoint-0.1.17
+    chart: waypoint-0.1.20
     heritage: Helm
     release: waypoint
     component: ui
@@ -210,14 +210,17 @@ spec:
       targetPort: http
     - name: https
       port: 443
+      nodePort: 30003
       targetPort: https
     - name: grpc
       port: 9701
+      nodePort: 30001
       targetPort: grpc
     - name: https-2
       port: 9702
+      nodePort: 30002
       targetPort: https
-  type: LoadBalancer
+  type: NodePort
 ---
 # Source: waypoint/templates/runner-statefulset.yaml
 # StatefulSet to run the Waypoint static runner.
@@ -250,7 +253,7 @@ spec:
   template:
     metadata:
       labels:
-        helm.sh/chart: waypoint-0.1.17
+        helm.sh/chart: waypoint-0.1.20
         app.kubernetes.io/name: waypoint
         app.kubernetes.io/instance: waypoint
         component: runner
@@ -288,7 +291,7 @@ spec:
             requests:
               cpu: 250m
               memory: 256Mi
-          image: docker.io/hashicorp/waypoint:0.10.5
+          image: docker.io/hashicorp/waypoint:0.11.2
           imagePullPolicy: IfNotPresent
           command:
             - "waypoint"
@@ -348,7 +351,7 @@ spec:
   template:
     metadata:
       labels:
-        helm.sh/chart: waypoint-0.1.17
+        helm.sh/chart: waypoint-0.1.20
         app.kubernetes.io/name: waypoint
         app.kubernetes.io/instance: waypoint
         component: server
@@ -369,7 +372,7 @@ spec:
             requests:
               cpu: 250m
               memory: 256Mi
-          image: docker.io/hashicorp/waypoint:0.10.5
+          image: docker.io/hashicorp/waypoint:0.11.2
           imagePullPolicy: IfNotPresent
           command:
             - "waypoint"
@@ -419,13 +422,13 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: waypoint-bootstrap-0.10.5-bnvsni
+  name: waypoint-bootstrap-0.11.2-ghzk65
   namespace: waypoint
   labels:
     app.kubernetes.io/name: waypoint
     app.kubernetes.io/instance: waypoint
     app.kubernetes.io/managed-by: Helm
-    helm.sh/chart: waypoint-0.1.17
+    helm.sh/chart: waypoint-0.1.20
 spec:
   backoffLimit: 1
   activeDeadlineSeconds: 600
@@ -434,7 +437,7 @@ spec:
     metadata:
       name: waypoint-bootstrap
       labels:
-        helm.sh/chart: waypoint-0.1.17
+        helm.sh/chart: waypoint-0.1.20
         app.kubernetes.io/name: waypoint
         app.kubernetes.io/instance: waypoint
         component: bootstrap
@@ -452,7 +455,7 @@ spec:
       containers:
         - name: waypoint-bootstrap
           resources:
-          image: docker.io/hashicorp/waypoint:0.10.5
+          image: docker.io/hashicorp/waypoint:0.11.2
           imagePullPolicy: IfNotPresent
           command:
             - "waypoint"
@@ -462,7 +465,7 @@ spec:
             - "-vvv"
             - "-root-token-secret=waypoint-server-token"
             - "-runner-token-secret=waypoint-runner-token"
-            - "-odr-image=docker.io/hashicorp/waypoint-odr:0.10.5"
+            - "-odr-image=docker.io/hashicorp/waypoint-odr:0.11.2"
             - "-odr-service-account=waypoint-runner-odr"
             - "-odr-image-pull-policy=IfNotPresent"
             - "-advertise-service=waypoint-ui"
