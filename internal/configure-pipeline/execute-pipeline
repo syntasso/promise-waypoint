@@ -2,5 +2,5 @@
 
 set -x
 
-username="$(yq eval '.spec.username' /input/object.yaml | tr '[:upper:]' '[:lower:]')"
-sed "s/TBDNAME/${username}/g" /tmp/transfer/token-generator-job.yaml > /output/token-generator-job.yaml
+username="$(yq eval '.spec.username' /kratix/input/object.yaml | tr '[:upper:]' '[:lower:]')"
+sed "s/TBDNAME/${username}/g" /tmp/transfer/token-generator-job.yaml > /kratix/output/token-generator-job.yaml
